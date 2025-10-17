@@ -41,7 +41,7 @@
 #' @importFrom doFuture registerDoFuture
 #' @importFrom foreach foreach %dopar%
 #' @importFrom glmmTMB glmmTMB glmmTMBControl sigma nbinom2
-#' @importFrom graphite pathways
+#' @importFrom graphite pathways pathwayGraph
 #' @importFrom KEGGREST keggGet
 #' @importFrom clusterProfiler bitr
 #' @importFrom org.Hs.eg.db org.Hs.eg.db
