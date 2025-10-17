@@ -48,7 +48,6 @@
 #'   }
 #'
 #' @export
-#'
 #' @examples
 #' \dontrun{
 #' data(example_counts)
