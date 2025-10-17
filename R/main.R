@@ -3,15 +3,6 @@
 #' Computes probabilistic activity scores for predefined biological pathways
 #' based on count data, using either a negative binomial (NB) or zero-inflated
 #' negative binomial (ZINB) model. Supports multithreading and batch correction.
-#' @importFrom dplyr mutate select filter
-#' @importFrom ggplot2 ggplot aes geom_point
-#' @importFrom clusterProfiler enrichKEGG
-#' @importFrom KEGGREST keggList keggGet
-#' @importFrom igraph graph_from_data_frame V E
-#' @importFrom foreach foreach %dopar%
-#' @importFrom doFuture registerDoFuture
-#' @importFrom future plan
-#' @importFrom glmmTMB glmmTMB
 #' @param counts A numeric matrix or data frame of gene expression counts
 #' @param method Character string specifying the statistical model to use.
 #'   Options are:
@@ -46,7 +37,16 @@
 #'     \item{\code{ModelParams}}{Estimated model parameters for each gene.}
 #'     \item{\code{Convergence}}{Logical vector indicating model convergence.}
 #'   }
-#'
+#' @importFrom future plan
+#' @importFrom doFuture registerDoFuture
+#' @importFrom foreach foreach %dopar%
+#' @importFrom glmmTMB glmmTMB glmmTMBControl sigma nbinom2
+#' @importFrom graphite pathways
+#' @importFrom KEGGREST keggGet
+#' @importFrom clusterProfiler bitr
+#' @importFrom org.Hs.eg.db org.Hs.eg.db
+#' @importFrom dplyr inner_join group_by mutate ungroup summarise %>%
+#' @importFrom igraph as.igraph page.rank
 #' @export
 #' @examples
 #' \dontrun{
