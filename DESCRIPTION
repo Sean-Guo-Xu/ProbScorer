@@ -2,7 +2,7 @@ Package: scScorer
 Title: Tools for Scoring KEGG Pathway for Single-Cell RNA-seq Data
 Version: 0.0.0.9000
 Authors@R: 
-    person("Guo", "Xu", , "20011009gx@gmail;.com", role = c("aut", "cre"))
+    person("Guo", "Xu", "20011009gx@gmail;.com", role = c("aut", "cre"))
 Description: Provides functions for scoring and analyzing single-cell
     RNA-seq data, including quality control, normalization, and gene set
     scoring.
