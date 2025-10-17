@@ -71,7 +71,7 @@ convert_entrez_to_symbol <- function(weight_vec) {
   # divided equally when an entrezid corresponds to multiple symbols
   df <- df %>%
     group_by(ENTREZID) %>%
-    mutate(weight = weight / n()) %>%
+    mutate(weight = weight / dplyr::n()) %>%
     ungroup()
 
   # Aggregate and accumulate by symbol
