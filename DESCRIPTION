@@ -22,3 +22,5 @@ Imports:
     foreach,
     doFuture,
     future
+URL: https://github.com/Sean-Guo-Xu/scScorer
+BugReports: https://github.com/Sean-Guo-Xu/scScorer/issues
