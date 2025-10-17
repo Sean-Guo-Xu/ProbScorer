@@ -111,7 +111,7 @@ get_pathway_weights <- function(PathwaySet = "Metabolism") {
     pathway <- pathways[[i]]
     if (length(pathway) == 0) next
     pathway_graph <- pathwayGraph(pathway)
-    pathway_graph <- as.igraph(pathway_graph)
+    pathway_graph <- igraph::igraph.from.graphNEL(pathway_graph)
     score <- page.rank(pathway_graph)$vector
     if (length(score) == 0) next
     suppressMessages(  weighs[[names(pathways)[[i]]]] <- convert_entrez_to_symbol(score) )

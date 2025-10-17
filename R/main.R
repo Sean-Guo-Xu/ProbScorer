@@ -46,7 +46,7 @@
 #' @importFrom clusterProfiler bitr
 #' @importFrom org.Hs.eg.db org.Hs.eg.db
 #' @importFrom dplyr inner_join group_by mutate ungroup summarise %>%
-#' @importFrom igraph as.igraph page.rank
+#' @importFrom igraph page.rank
 #' @export
 #' @examples
 #' \dontrun{
