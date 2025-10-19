@@ -72,7 +72,9 @@ ProbScorer <- function(counts,
                                       "Cellular Processes",
                                       "Organismal Systems",
                                       "Human Diseases",
-                                      "Drug Development")) {
+                                      "Drug Development"),
+                       memory_size = 4 * 1024^3
+                       ) {
 
   # Input validation
   if (!is.matrix(counts) && !inherits(counts, "Matrix")) {
@@ -91,7 +93,7 @@ ProbScorer <- function(counts,
   method <- match.arg(method)
 
   # Set future globals max size to handle large objects in parallel
-  old_option <- options(future.globals.maxSize = 800 * 1024^2)
+  old_option <- options(future.globals.maxSize = memory_size)
   on.exit(options(old_option), add = TRUE)
 
   # Get pathway weights (assuming this function exists)
