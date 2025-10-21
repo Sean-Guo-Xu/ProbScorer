@@ -17,50 +17,76 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 <!-- badges: end -->
+scScorer builds a gene-interaction graph for each KEGG pathway, assigns gene importance weights via a PageRank-style algorithm, and then computes per-cell pathway activity scores by fitting a (negative-binomial or zero-inflated NB) model to weighted gene expression while adjusting for batch effects and library size.
 
-The goal of scScorer is to ...
+## Principle
+In scScorer, each KEGG pathway is represented as a directed gene-interaction network, where nodes correspond to genes and edges reflect regulatory or metabolic interactions. A PageRank-style algorithm is applied on this network to assign an importance weight to every gene, capturing its topological influence within the pathway. Genes that occupy more central or highly connected positions receive higher weights, reflecting their stronger contribution to the pathway’s overall activity.
+
+For each cell, the weighted expression of pathway genes is modeled using either a Negative Binomial (NB) or Zero-Inflated NB (ZINB) regression framework. This model accounts for dropout events and cell-specific covariates such as sequencing depth or batch effects through offset and batch terms. The fitted model estimates conditional mean functions (CMF) that represent the probability of gene activation given cell-specific factors. These CMF-based probabilities are then combined using the PageRank-derived weights to produce a final pathway activity score for each cell, quantifying the functional engagement of that pathway at the single-cell level.
+
+## Advantages
+- Constructs a gene-interaction graph for each pathway and assigns gene importance weights via a PageRank-style algorithm  
+- Integrates weighted gene expression into a per-cell scoring framework using NB or ZINB models  
+- Adjusts for batch effects and library size via offsets, making the scores more robust across cells  
+- Allows flexible selection of KEGG pathway sets (e.g., "Metabolism", "Human Diseases") for targeted analyses
 
 ## Installation
+You can install the development version of scScorer from [GitHub](https://github.com/Sean-Guo-Xu/scScorer) with:
 
-You can install the development version of scScorer from [GitHub](https://github.com/) with:
+``` {r Install, eval = FALSE}
 
-``` {r}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+if (!requireNamespace("remotes", quietly = TRUE))
+    install.packages("remotes")
+
+BiocManager::install(c(
+    "graphite",
+    "KEGGREST",
+    "clusterProfiler",
+    "org.Hs.eg.db"
+))
+
+remotes::install_github("Sean-Guo-Xu/scScorer")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
+```{r example, message=FALSE, warning=FALSE}
 
 library(scScorer)
 library(Seurat)
 library(SeuratData)
-InstallData("pbmc3k")
-data("pbmc3k")
-res1 <- ProbScorer(pbmc3k@assays$RNA@counts, PathwaySet = "Metabolism")
 
-InstallData("ifnb")
+## ----ifnb example-------------------------------------------------------------
+# InstallData("ifnb")
 data("ifnb")
-res2 <- ProbScorer(ifnb@assays$RNA$counts, PathwaySet = "Metabolism")
+res2 <- ProbScorer(
+  ifnb@assays$RNA@counts,
+  PathwaySet = "Metabolism"
+)
+```
 
-unique(ifnb@meta.data$stim)
-res3 <- ProbScorer(ifnb@assays$RNA$counts, method = "zinb",batch = ifnb@meta.data$stim, offset = ifnb@meta.data$nCount_RNA, PathwaySet = "Human Diseases",maxit = 50, ncores = 4)
+```{r, eval = FALSE}
+
+## !!! Need big memory !!!
+res3 <- ProbScorer(
+  ifnb@assays$RNA@counts,
+  method = "zinb",
+  batch = ifnb@meta.data$stim,
+  offset = ifnb@meta.data$nCount_RNA,
+  PathwaySet = "Human Diseases",
+  maxit = 50,
+  ncores = 4
+)
+```
+
+
+```{r pressure, echo=FALSE, message=FALSE, warning=FALSE}
+ifnb@meta.data$Fatty_acid_metabolism<- res2["Fatty acid metabolism", ]
+ifnb<-UpdateSeuratObject(ifnb)
+VlnPlot(ifnb, group.by = "seurat_annotations", features = "Fatty_acid_metabolism")
+VlnPlot(ifnb, group.by = "stim", features = "Fatty_acid_metabolism")
 
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
