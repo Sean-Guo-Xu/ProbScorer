@@ -73,6 +73,7 @@ ProbScorer <- function(counts,
                                       "Organismal Systems",
                                       "Human Diseases",
                                       "Drug Development"),
+                       min_cells_expressed = 5,
                        memory_size = 4 * 1024^3
                        ) {
 
@@ -112,8 +113,17 @@ ProbScorer <- function(counts,
 
   # Filter counts to include only genes present in pathways
   counts_filtered <- counts[rownames(counts) %in% all_genes, , drop = FALSE]
-
-  if (nrow(counts_filtered) == 0) {
+  
+  low_expr_genes <- rownames(counts_filtered)[apply(counts_filtered, 1, function(x) sum(x > 0) < min_cells_expressed)]
+  
+  if (length(low_expr_genes) > 0) {
+    message("The following genes were removed due to low expression: ",
+            paste(low_expr_genes, collapse = ", "))
+  }
+  
+  counts_filtered <- counts_filtered[!(rownames(counts_filtered) %in% low_expr_genes), , drop = FALSE]
+ 
+   if (nrow(counts_filtered) == 0) {
     stop("No genes from the counts matrix are present in the specified pathways")
   }
 

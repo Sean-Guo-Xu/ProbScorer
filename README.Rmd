@@ -24,9 +24,7 @@ The goal of scScorer is to ...
 
 You can install the development version of scScorer from [GitHub](https://github.com/) with:
 
-``` r
-# install.packages("pak")
-pak::pak("Sean-Guo-Xu/scScorer")
+``` {r}
 ```
 
 ## Example
@@ -34,8 +32,21 @@ pak::pak("Sean-Guo-Xu/scScorer")
 This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
+
 library(scScorer)
-## basic example code
+library(Seurat)
+library(SeuratData)
+InstallData("pbmc3k")
+data("pbmc3k")
+res1 <- ProbScorer(pbmc3k@assays$RNA@counts, PathwaySet = "Metabolism")
+
+InstallData("ifnb")
+data("ifnb")
+res2 <- ProbScorer(ifnb@assays$RNA$counts, PathwaySet = "Metabolism")
+
+unique(ifnb@meta.data$stim)
+res3 <- ProbScorer(ifnb@assays$RNA$counts, method = "zinb",batch = ifnb@meta.data$stim, offset = ifnb@meta.data$nCount_RNA, PathwaySet = "Human Diseases",maxit = 50, ncores = 4)
+
 ```
 
 What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
