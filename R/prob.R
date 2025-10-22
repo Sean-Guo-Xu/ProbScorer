@@ -113,7 +113,6 @@ fit_gene_counts_parallel <- function(counts,
                                 })
                                 
                                 
-                                #print(paste0(round(i / n_genes * 100, 2), "%"))
                                 
                                 if (isFALSE(fit) || is.null(fit)) {
                                   warning(sprintf("%s gene expression was removed: regression failed to converge.", gene_name))
