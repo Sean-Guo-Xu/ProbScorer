@@ -13,14 +13,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-# scScorer
+# ProbScorer
 
 <!-- badges: start -->
 <!-- badges: end -->
-scScorer builds a gene-interaction graph for each KEGG pathway, assigns gene importance weights via a PageRank-style algorithm, and then computes per-cell pathway activity scores by fitting a (negative-binomial or zero-inflated NB) model to weighted gene expression while adjusting for batch effects and library size.
+ProbScorer builds a gene-interaction graph for each KEGG pathway, assigns gene importance weights via a PageRank-style algorithm, and then computes per-cell pathway activity scores by fitting a (negative-binomial or zero-inflated NB) model to weighted gene expression while adjusting for batch effects and library size.
 
 ## Principle
-In scScorer, each KEGG pathway is represented as a directed gene-interaction network, where nodes correspond to genes and edges reflect regulatory or metabolic interactions. A PageRank-style algorithm is applied on this network to assign an importance weight to every gene, capturing its topological influence within the pathway. Genes that occupy more central or highly connected positions receive higher weights, reflecting their stronger contribution to the pathway’s overall activity.
+In ProbScorer, each KEGG pathway is represented as a directed gene-interaction network, where nodes correspond to genes and edges reflect regulatory or metabolic interactions. A PageRank-style algorithm is applied on this network to assign an importance weight to every gene, capturing its topological influence within the pathway. Genes that occupy more central or highly connected positions receive higher weights, reflecting their stronger contribution to the pathway’s overall activity.
 
 For each cell, the weighted expression of pathway genes is modeled using either a Negative Binomial (NB) or Zero-Inflated NB (ZINB) regression framework. This model accounts for dropout events and cell-specific covariates such as sequencing depth or batch effects through offset and batch terms. The fitted model estimates conditional mean functions (CMF) that represent the probability of gene activation given cell-specific factors. These CMF-based probabilities are then combined using the PageRank-derived weights to produce a final pathway activity score for each cell, quantifying the functional engagement of that pathway at the single-cell level.
 
@@ -31,7 +31,7 @@ For each cell, the weighted expression of pathway genes is modeled using either 
 - Allows flexible selection of KEGG pathway sets (e.g., "Metabolism", "Human Diseases") for targeted analyses
 
 ## Installation
-You can install the development version of scScorer from [GitHub](https://github.com/Sean-Guo-Xu/scScorer) with:
+You can install the development version of ProbScorer from [GitHub](https://github.com/Sean-Guo-Xu/ProbScorer) with:
 
 ``` {r Install, eval = FALSE}
 
@@ -47,7 +47,7 @@ BiocManager::install(c(
     "org.Hs.eg.db"
 ))
 
-remotes::install_github("Sean-Guo-Xu/scScorer")
+remotes::install_github("Sean-Guo-Xu/ProbScorer")
 ```
 
 ## Example
